@@ -43,7 +43,7 @@ router.get('/:map', async (req, res) => {
       }
       if (run.createdAt > timeHandler.monthAgoTimestamp) {
         monthValue.count += 1;
-        monthValue .collected = Utils.mergeCollected(monthValue.collected, collectedInRun);
+        monthValue.collected = Utils.mergeCollected(monthValue.collected, collectedInRun);
       } 
 
     });

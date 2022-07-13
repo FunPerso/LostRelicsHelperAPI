@@ -6,19 +6,51 @@ const timeHandler = require('../../TimeHandler');
 router.get('/', async (req, res) => {
   try {
     console.log(timeHandler.getTodayStart());
-    const shadowStones = await Run.find()
-      .select('shadowStone createdAt -_id')
-      .where('createdAt').gte(timeHandler.monthAgoTimestamp);
+    const runs = await Run.find()
+      .select('shadowStone map createdAt -_id');
+      // .where('createdAt').gte(timeHandler.monthAgoTimestamp);
 
-    let monthValue = 0;
-    let weekValue = 0;
-    let dayValue = 0;
-    const perDay = {};
+    let monthValue = {
+      runCount: 0,
+      runLooted: 0,
+      count: 0,
+      maps: {}
+    };
+    let weekValue = {
+      runCount: 0,
+      runLooted: 0,
+      count: 0,
+      maps: {}
+    };
+    let dayValue = {
+      runCount: 0,
+      runLooted: 0,
+      count: 0,
+      maps: {}
+    };
 
-    shadowStones.map((ssObject) => {
-      if (ssObject.createdAt > timeHandler.dayAgoTimestamp) dayValue += ssObject.shadowStone;
-      if (ssObject.createdAt > timeHandler.weekAgoTimestamp) weekValue += ssObject.shadowStone;
-      monthValue += ssObject.shadowStone;
+    runs.map((run) => {
+      if (run.createdAt > timeHandler.dayAgoTimestamp) {
+        dayValue.count += run.shadowStone;
+        if (!dayValue.maps[run.map]) dayValue.maps[run.map] = 0;
+        dayValue.maps[run.map] += run.shadowStone;
+        dayValue.runCount += 1;
+        if (run.shadowStone > 0) dayValue.runLooted += 1;
+      } 
+
+      if (run.createdAt > timeHandler.weekAgoTimestamp) {
+        weekValue.count += run.shadowStone;
+        if (!weekValue.maps[run.map]) weekValue.maps[run.map] = 0;
+        weekValue.maps[run.map] += run.shadowStone;
+        weekValue.runCount += 1;
+        if (run.shadowStone > 0) weekValue.runLooted += 1;
+      }
+
+      monthValue.count += run.shadowStone;
+      if (!monthValue.maps[run.map]) monthValue.maps[run.map] = 0;
+      monthValue.maps[run.map] += run.shadowStone;
+      monthValue.runCount += 1;
+      if (run.shadowStone > 0) monthValue.runLooted += 1;
     });
 
     res.send({
@@ -27,7 +59,7 @@ router.get('/', async (req, res) => {
       monthValue: monthValue
     });
   } catch (err) {
-
+    res.send(err)
   }
 });
 

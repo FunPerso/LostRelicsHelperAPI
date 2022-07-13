@@ -17,8 +17,10 @@ con.on('close', () => {
 
 //LR api
 const LRItemsRouter = require('./routes/LostRelics/items');
+const LRMapsRouter = require('./routes/LostRelics/maps');
 const LRRunsRouter = require('./routes/LostRelics/runs');
 app.use('/LR/items', LRItemsRouter);
+app.use('/LR/maps', LRMapsRouter);
 app.use('/LR/runs', LRRunsRouter);
 
 //stat api

@@ -32,14 +32,13 @@ router.get('/:id', async (req, res) => {
       totalLooted += collectedInRun[item._id];
     });
 
-    console.log(runs[0]);
+    console.log(totalLooted);
     res.send({
       maps,
       dayValue,
       weekValue,
       monthValue,
       totalLooted,
-      collectedInRun,
     })
   } catch (err) {
     res.status(400).send(err)

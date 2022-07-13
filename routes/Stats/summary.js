@@ -9,7 +9,7 @@ router.get('/', async (req, res) => {
   try {
     const runs = await Run.find()
       .select('wasSuccessful map items createdAt shadowStone -_id')
-      .where('createdAt').gte(timeHandler.weekAgoTimestamp);
+      .where('createdAt').gte(timeHandler.monthAgoTimestamp);
 
     const maps = {};
     const bestSSDropToday = {
